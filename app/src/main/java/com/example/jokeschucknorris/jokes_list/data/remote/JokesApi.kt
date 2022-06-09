@@ -8,9 +8,9 @@ import retrofit2.http.Path
 interface JokesApi {
 
     @GET("random/{number}")
-    fun getRandomJokes (
+    suspend fun getRandomJokes (
         @Path("number") number: String,
-    ): Flow<JokeDto>
+    ): JokeDto
 
     companion object {
         const val BASE_URL = "http://api.icndb.com/jokes/"

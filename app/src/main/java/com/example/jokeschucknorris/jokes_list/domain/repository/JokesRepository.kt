@@ -4,5 +4,5 @@ import com.example.jokeschucknorris.jokes_list.data.remote.dto.JokeDto
 import kotlinx.coroutines.flow.Flow
 
 interface JokesRepository {
-    fun getRandomJokes(number: String): Flow<JokeDto>
+    suspend fun getRandomJokes(number: String): JokeDto
 }
