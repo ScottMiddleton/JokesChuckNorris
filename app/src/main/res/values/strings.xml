@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">JokesChuckNorris</string>
+    <string name="error_something_went_wrong">Oops, something went wrong!</string>
 </resources>
