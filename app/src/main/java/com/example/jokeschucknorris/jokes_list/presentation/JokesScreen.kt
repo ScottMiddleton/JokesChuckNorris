@@ -30,7 +30,6 @@ fun JokesScreen(
     val state = viewModel.state
 
     LaunchedEffect(scaffoldState.snackbarHostState) {
-        viewModel.onEvent(JokeEvent.OnLoadJokes)
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {

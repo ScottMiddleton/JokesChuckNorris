@@ -26,9 +26,12 @@ class JokesViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    init {
+        executeLoad()
+    }
+
     fun onEvent(event: JokeEvent) {
         when (event) {
-            JokeEvent.OnLoadJokes -> executeLoad()
             JokeEvent.OnRefreshJokes -> executeRefresh()
         }
     }
