@@ -1,15 +1,22 @@
 package com.example.jokeschucknorris.jokes_list.presentation
 
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jokeschucknorris.R
+import com.example.jokeschucknorris.jokes_list.presentation.components.JokeListItem
 import com.example.jokeschucknorris.jokes_list.presentation.util.UiEvent
-import com.example.jokeschucknorris.ui.theme.JokesChuckNorrisTheme
 import kotlinx.coroutines.flow.collect
 
 @Composable
@@ -17,11 +24,11 @@ fun JokesScreen(
     viewModel: JokesViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-    viewModel.getJokes()
     val context = LocalContext.current
     val state = viewModel.state
 
     LaunchedEffect(scaffoldState.snackbarHostState) {
+        viewModel.getJokes()
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
@@ -33,13 +40,25 @@ fun JokesScreen(
         }
     }
 
-    Text(text = "Hello World")
-}
+    LazyColumn(modifier = Modifier.fillMaxSize().fillMaxHeight()) {
+        items(state.jokesList) { joke ->
+            JokeListItem(joke = joke)
+        }
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    JokesChuckNorrisTheme {
-//        JokesScreen()
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        when {
+            state.isLoading -> CircularProgressIndicator()
+            state.jokesList.isEmpty() -> {
+                Text(
+                    text = stringResource(id = R.string.no_results),
+                    style = MaterialTheme.typography.body1,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     }
 }
