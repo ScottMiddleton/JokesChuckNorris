@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.Modifier
-import com.example.jokeschucknorris.jokes_list.presentation.JokesScreen
+import com.example.jokeschucknorris.feature_jokes_list.presentation.JokesScreen
 import com.example.jokeschucknorris.ui.theme.JokesChuckNorrisTheme
 import dagger.hilt.android.AndroidEntryPoint
 
