@@ -1,7 +1,7 @@
 package com.example.jokeschucknorris.feature_jokes_list.domain.use_case
 
-import com.example.jokeschucknorris.feature_jokes_list.domain.Constants.MAX_RANDOM_JOKES
-import com.example.jokeschucknorris.feature_jokes_list.domain.Constants.MIN_RANDOM_JOKES
+import com.example.jokeschucknorris.feature_jokes_list.domain.use_case.Constants.MAX_RANDOM_JOKES
+import com.example.jokeschucknorris.feature_jokes_list.domain.use_case.Constants.MIN_RANDOM_JOKES
 import com.example.jokeschucknorris.feature_jokes_list.domain.model.Joke
 import com.example.jokeschucknorris.feature_jokes_list.domain.repository.JokesRepository
 
