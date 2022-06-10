@@ -17,18 +17,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jokeschucknorris.R
 import com.example.jokeschucknorris.jokes_list.presentation.components.JokeListItem
 import com.example.jokeschucknorris.jokes_list.presentation.util.UiEvent
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.flow.collect
 
 @Composable
 fun JokesScreen(
     viewModel: JokesViewModel = hiltViewModel(),
-    scaffoldState: ScaffoldState = rememberScaffoldState()
+    scaffoldState: ScaffoldState
 ) {
     val context = LocalContext.current
     val state = viewModel.state
 
     LaunchedEffect(scaffoldState.snackbarHostState) {
-        viewModel.getJokes()
+        viewModel.onEvent(JokeEvent.OnLoadJokes)
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
@@ -40,9 +42,14 @@ fun JokesScreen(
         }
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize().fillMaxHeight()) {
-        items(state.jokesList) { joke ->
-            JokeListItem(joke = joke)
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(state.isRefreshing),
+        onRefresh = { viewModel.onEvent(JokeEvent.OnRefreshJokes) },
+    ) {
+        LazyColumn(modifier = Modifier.fillMaxSize().fillMaxHeight()) {
+            items(state.jokesList) { joke ->
+                JokeListItem(joke = joke)
+            }
         }
     }
 

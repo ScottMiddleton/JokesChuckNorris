@@ -8,6 +8,10 @@ buildscript {
         lifecycle_version = '2.4.1'
     }
 
+    repositories {
+        mavenCentral()
+    }
+
     dependencies {
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.41")
     }

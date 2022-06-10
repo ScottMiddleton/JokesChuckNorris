@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class JokesViewModel @Inject constructor(
     private val getRandomJokes: GetRandomJokes
-): ViewModel() {
+) : ViewModel() {
 
     var state by mutableStateOf(JokesState())
         private set
@@ -26,21 +26,46 @@ class JokesViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun getJokes() {
-        viewModelScope.launch {
-            state = state.copy(
-                isLoading = true,
-                jokesList = emptyList()
-            )
+    fun onEvent(event: JokeEvent) {
+        when (event) {
+            JokeEvent.OnLoadJokes -> executeLoad()
+            JokeEvent.OnRefreshJokes -> executeRefresh()
+        }
+    }
 
+    private fun executeLoad() {
+        state = state.copy(
+            isLoading = true,
+            isRefreshing = false
+        )
+
+        getJokes()
+    }
+
+    private fun executeRefresh() {
+        state = state.copy(
+            isRefreshing = false,
+            isLoading = false
+        )
+
+        getJokes()
+    }
+
+    private fun getJokes() {
+        viewModelScope.launch {
             getRandomJokes().onSuccess { jokes ->
-                    state = state.copy(
-                        jokesList = jokes,
-                        isLoading = false,
-                    )
-                }
+                state = state.copy(
+                    jokesList = jokes,
+                    isLoading = false,
+                    isRefreshing = false
+                )
+            }
                 .onFailure {
-                    state = state.copy(isLoading = false)
+                    state = state.copy(
+                        isLoading = false,
+                        isRefreshing = false
+                    )
+
                     _uiEvent.send(
                         UiEvent.ShowSnackbar(
                             UiText.StringResource(R.string.error_something_went_wrong)
